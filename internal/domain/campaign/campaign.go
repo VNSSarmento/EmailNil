@@ -1,6 +1,7 @@
 package campaign
 
 import (
+	"errors"
 	"time"
 
 	"github.com/rs/xid"
@@ -18,7 +19,16 @@ type Contact struct {
 	email string
 }
 
-func NewCampaign(name string, content string, emails []string) *Campaign {
+func NewCampaign(name string, content string, emails []string) (*Campaign, error) {
+
+	if name == "" {
+		return nil, errors.New("name is required")
+	}
+
+	if content == "" {
+		return nil, errors.New("content is required")
+	}
+
 	contact := make([]Contact, len(emails))
 
 	for index, email := range emails {
@@ -30,7 +40,7 @@ func NewCampaign(name string, content string, emails []string) *Campaign {
 		Content:  content,
 		CreatAt:  time.Now(),
 		Contacts: contact,
-	}
+	}, nil
 }
 
 type Published struct {
@@ -44,7 +54,12 @@ type Public struct {
 	Name string
 }
 
-func NewPublished(name string, urlImag string, categori string, publics []string) *Published {
+func NewPublished(name string, urlImag string, categori string, publics []string) (*Published, error) {
+
+	if name == "" {
+		return nil, errors.New("name is required")
+	}
+
 	public := make([]Public, len(publics))
 
 	for i, value := range publics {
@@ -56,5 +71,5 @@ func NewPublished(name string, urlImag string, categori string, publics []string
 		Img:      "abc",
 		Category: "acbx",
 		Public:   public,
-	}
+	}, nil
 }

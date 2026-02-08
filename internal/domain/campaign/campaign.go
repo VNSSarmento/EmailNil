@@ -1,75 +1,46 @@
 package campaign
 
 import (
-	"errors"
+	internaerrors "emailNil/internal/internaErrors"
 	"time"
 
 	"github.com/rs/xid"
 )
 
 type Campaign struct {
-	ID       string
-	Name     string
-	Content  string
-	CreatAt  time.Time
-	Contacts []Contact
+	ID       string    `validate:"required"`
+	Name     string    `validate:"min=5,max=24"`
+	Content  string    `validate:"min=5,max=1024"`
+	CreatAt  time.Time `validate:"required"`
+	Contacts []Contact `validate:"min=1,dive"`
 }
 
 type Contact struct {
-	email string
+	Email string `validate:"email"`
 }
 
 func NewCampaign(name string, content string, emails []string) (*Campaign, error) {
 
-	if name == "" {
-		return nil, errors.New("name is required")
-	}
-
-	if content == "" {
-		return nil, errors.New("content is required")
-	}
-
 	contact := make([]Contact, len(emails))
 
 	for index, email := range emails {
-		contact[index].email = email
+		contact[index].Email = email
 	}
-	return &Campaign{
+
+	campaign := &Campaign{
 		ID:       xid.New().String(),
 		Name:     name,
 		Content:  content,
 		CreatAt:  time.Now(),
 		Contacts: contact,
-	}, nil
-}
-
-type Published struct {
-	Name     string
-	Img      string
-	Category string
-	Public   []Public
-}
-
-type Public struct {
-	Name string
-}
-
-func NewPublished(name string, urlImag string, categori string, publics []string) (*Published, error) {
-
-	if name == "" {
-		return nil, errors.New("name is required")
 	}
 
-	public := make([]Public, len(publics))
+	err := internaerrors.ValidateStruct(campaign)
 
-	for i, value := range publics {
-		public[i].Name = value
+	if err == nil {
+		return campaign, nil
 	}
 
-	return &Published{
-		Name:     "aiopsjdaspjkod",
-		Img:      "abc",
-		Category: "acbx",
-		Public:   public,
-	}, nil
+	return nil, err
+
 }

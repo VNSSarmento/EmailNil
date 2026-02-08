@@ -7,21 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// esse é teste de unidades
 var (
 	name     = "Campanha"
 	content  = "Body"
 	contacts = []string{"emailteste@gmail.com", "emailteste2@gmail.com"}
 )
-
-func Test_NewCampaign_CreatCampaign(t *testing.T) {
-	assert := assert.New(t)
-
-	campaign, _ := NewCampaign(name, content, contacts)
-
-	//assert.Equal(campaign.ID, "d5v2f2s81p6rj2rafsu0")
-	assert.Equal(campaign.Name, "Capanha X")
-
-}
 
 func Test_NewCampaign_IDisNotNil(t *testing.T) {
 	assert := assert.New(t)

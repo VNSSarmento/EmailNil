@@ -28,6 +28,7 @@ func HandlerError(handler EndpointFunc) http.HandlerFunc {
 		if obj != nil {
 			render.JSON(w, r, obj)
 		}
+
 	})
 
 }

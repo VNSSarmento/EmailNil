@@ -1,13 +1,23 @@
 package main
 
 import (
-	"emailNil/internal/contract"
 	"emailNil/internal/domain/campaign"
+	"emailNil/internal/endpoints"
+	"emailNil/internal/infra/database"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/render"
+)
+
+var (
+	CampaignRepository = campaign.Service{
+		Repository: &database.CampaignRepository{},
+	}
+
+	handler = endpoints.Handler{
+		CampaingService: CampaignRepository,
+	}
 )
 
 func main() {
@@ -17,32 +27,11 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
 
+	r.Get("/", endpoints.HandlerError(handler.CampaignGet))
+
 	r.Route("/campaign", func(r chi.Router) {
-		r.Post("/newCampaign", createCampaing)
+		r.Post("/newCampaign", endpoints.HandlerError(handler.CreateCampaing))
 	})
 
 	http.ListenAndServe(":3000", r)
-}
-
-func createCampaing(w http.ResponseWriter, r *http.Request) {
-	var request contract.NewCampaign
-
-	if err := render.DecodeJSON(r.Body, &request); err != nil {
-		render.Status(r, 400)
-		render.JSON(w, r, map[string]string{"error": "JSON inválido"})
-		return
-	}
-
-	service := campaign.Service{}
-	id, err := service.Create(request)
-
-	if err != nil {
-		render.Status(r, 400)
-		render.JSON(w, r, map[string]string{"error": err.Error()})
-		return
-	}
-
-	render.Status(r, 201)
-	render.JSON(w, r, map[string]string{"id": id})
-
 }

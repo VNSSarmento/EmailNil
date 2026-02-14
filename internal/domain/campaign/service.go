@@ -6,6 +6,7 @@ import (
 )
 
 //struct service recebe o reporsitorio
+//service é como o controller, ele vai ficar em contato com o Repositorio e o Handler
 
 type Service struct {
 	Repository Repository

@@ -34,6 +34,11 @@ func (r *RepositoryMock) Save(campaign *Campaign) error {
 	return arrgs.Error(0)
 }
 
+func (r *RepositoryMock) Get() ([]Campaign, error) {
+	//arrgs := r.Called(campaign)
+	return nil, nil
+}
+
 func Test_Creat_ValidateDomain(t *testing.T) {
 
 	assert := assert.New(t)

@@ -48,8 +48,7 @@ func Test_NewCampaign_MustValidateName(t *testing.T) {
 func Test_NewCampaign_MustValidateContent(t *testing.T) {
 	assert := assert.New(t)
 
-	_, err := NewCampaign(name, "", contacts)
+	_, err := NewCampaign("", "", contacts)
 
-	assert.Equal("content is required", err.Error())
-
+	assert.Equal("Content precisa ter no mínimo 5", err.Error())
 }

@@ -22,3 +22,30 @@ func (h *Handler) CreateCampaing(w http.ResponseWriter, r *http.Request) (interf
 
 	return map[string]string{"id": id}, 201, nil
 }
+
+// fiz pra deixar aqui como é o endpoint sem o wrapper
+// func (h *Handler) CreateNewCamp(w http.ResponseWriter, r *http.Request) {
+// 	var request contract.NewCampaign
+
+// 	err := render.DecodeJSON(r.Body, &request)
+
+// 	if err != nil {
+// 		render.Status(r, 400)
+// 		render.JSON(w, r, map[string]string{"Erro": err.Error()})
+// 		return
+// 	}
+
+// 	id, err := h.CampaingService.Create(request)
+
+// 	if err != nil {
+// 		if errors.Is(err, internaerrors.ErrInternal) {
+// 			render.Status(r, 500)
+// 		} else {
+// 			render.Status(r, 400)
+// 			render.JSON(w, r, map[string]string{"Erro": err.Error()})
+// 			return
+// 		}
+// 	}
+// 	render.Status(r, 201)
+// 	render.JSON(w, r, map[string]string{"id": id})
+// }

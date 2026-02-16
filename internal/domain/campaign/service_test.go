@@ -20,9 +20,16 @@ var (
 		Emails:  []string{"al@gmail.com"},
 	}
 
+	NewCampaignResponse = contract.NewCampaignResponse{
+		ID:      xid.New().String(),
+		Name:    "Test tttt",
+		Content: "Bodsssy",
+		Status:  "Pending",
+	}
+
 	fake = faker.New()
 
-	service = Service{}
+	service = ServiceImp{}
 )
 
 type RepositoryMock struct {
@@ -37,6 +44,11 @@ func (r *RepositoryMock) Save(campaign *Campaign) error {
 func (r *RepositoryMock) Get() ([]Campaign, error) {
 	//arrgs := r.Called(campaign)
 	return nil, nil
+}
+
+func (r *RepositoryMock) GetId(id string) (*Campaign, error) {
+	arrgs := r.Called(id)
+	return arrgs.Get(0).(*Campaign), arrgs.Error(1)
 }
 
 func Test_Creat_ValidateDomain(t *testing.T) {
@@ -109,7 +121,7 @@ func Test_Campaign_ValidateRepositorySave(t *testing.T) {
 
 	repositoryMock := &RepositoryMock{}
 
-	service := Service{
+	service := ServiceImp{
 		Repository: repositoryMock,
 	}
 
@@ -138,4 +150,23 @@ func Test_NewCampaignEmailInvalid(t *testing.T) {
 
 	assert.Equal("Email precisa ser um email válido", err.Error())
 
+}
+
+func Test_Campaign_GetID_ReturnCampaig(t *testing.T) {
+	assert := assert.New(t)
+	campaign, _ := NewCampaign("Valid Name", "Valid Content", []string{"test@email.com"})
+
+	repositoryMock := &RepositoryMock{}
+
+	service := ServiceImp{
+		Repository: repositoryMock,
+	}
+
+	repositoryMock.
+		On("GetId", mock.Anything).
+		Return(campaign, nil)
+
+	campaignReturn, _ := service.GetId(campaign.ID)
+
+	assert.Equal(campaign.ID, campaignReturn.ID)
 }

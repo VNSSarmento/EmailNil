@@ -10,18 +10,16 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-var (
-	CampaignRepository = campaign.Service{
+func main() {
+	r := chi.NewRouter()
+
+	CampaignRepository := campaign.ServiceImp{
 		Repository: &database.CampaignRepository{},
 	}
 
-	handler = endpoints.Handler{
-		CampaingService: CampaignRepository,
+	handler := endpoints.Handler{
+		CampaingService: &CampaignRepository,
 	}
-)
-
-func main() {
-	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
@@ -31,6 +29,7 @@ func main() {
 
 	r.Route("/campaign", func(r chi.Router) {
 		r.Post("/newCampaign", endpoints.HandlerError(handler.CreateCampaing))
+		r.Get("/{id}", endpoints.HandlerError(handler.CampaignGetId))
 	})
 
 	http.ListenAndServe(":3000", r)

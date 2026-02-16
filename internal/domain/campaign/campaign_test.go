@@ -10,7 +10,7 @@ import (
 // esse é teste de unidades
 var (
 	name     = "Campanha"
-	content  = "Body"
+	content  = "Bodaasdy"
 	contacts = []string{"emailteste@gmail.com", "emailteste2@gmail.com"}
 )
 
@@ -39,16 +39,24 @@ func Test_NewCampaign_CreatAtNotNil(t *testing.T) {
 func Test_NewCampaign_MustValidateName(t *testing.T) {
 	assert := assert.New(t)
 
-	_, err := NewCampaign(name, content, contacts)
+	_, err := NewCampaign("", content, contacts)
 
-	assert.Equal("name is required", err.Error())
+	assert.Equal("Name precisa ter no mínimo 5", err.Error())
 
 }
 
 func Test_NewCampaign_MustValidateContent(t *testing.T) {
 	assert := assert.New(t)
 
-	_, err := NewCampaign("", "", contacts)
+	_, err := NewCampaign(name, "", contacts)
 
 	assert.Equal("Content precisa ter no mínimo 5", err.Error())
+}
+
+func Test_NewCampaign_MustValidateStatus(t *testing.T) {
+	assert := assert.New(t)
+
+	Campaign, _ := NewCampaign(name, content, contacts)
+
+	assert.Equal("Pending", Campaign.Status)
 }

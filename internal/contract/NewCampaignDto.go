@@ -8,3 +8,10 @@ type NewCampaign struct {
 	Content string
 	Emails  []string
 }
+
+type NewCampaignResponse struct {
+	ID      string
+	Name    string
+	Content string
+	Status  string
+}
